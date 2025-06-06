@@ -1,0 +1,21 @@
+meta {
+  name: register
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "firstname": "Coralie",
+    "lastname": "Ant",
+    "email": "cora@ant.com",
+    "password": "test",
+    "role": "administrateur"
+  }
+}
