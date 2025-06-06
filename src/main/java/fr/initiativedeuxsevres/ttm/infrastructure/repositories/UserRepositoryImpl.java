@@ -49,10 +49,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(UUID userId) {
+    public User findById(UUID userId) {
         String query = "SELECT * FROM users WHERE id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query,
-                new Object[]{userId}, (rs, rowNum) ->
+        return jdbcTemplate.queryForObject(query,
+                new Object[]{userId.toString()}, (rs, rowNum) ->
                         new User(
                                 UUID.fromString(rs.getString("id")),
                                 rs.getString("firstname"),
@@ -63,6 +63,17 @@ public class UserRepositoryImpl implements UserRepository {
                                 rs.getString("role"),
                                 new ArrayList<>(),
                                 new ArrayList<>()
-                        )));
+                        ));
+    }
+
+    @Override
+    public User updateUser(User user) {
+        String query = "SELECT * FROM users WHERE id = ?";
+        return null;
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return List.of();
     }
 }

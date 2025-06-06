@@ -14,5 +14,5 @@ public interface UserService extends UserDetailsService {
 
     String logIn(LoginRequestDto loginRequestDto);
 
-    Optional<User> findById(UUID userId);
+    User findById(UUID userId);
 }

@@ -2,6 +2,7 @@ package fr.initiativedeuxsevres.ttm.domain.repositories;
 
 import fr.initiativedeuxsevres.ttm.domain.models.User;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -10,7 +11,9 @@ public interface UserRepository {
 
     User logIn(String email);
 
-    Optional<User> findById(UUID userId);
+    User findById(UUID userId);
 
-    ///User updateUser(User user);
+    User updateUser(User user);
+
+    List<User> getAllUsers();
 }
