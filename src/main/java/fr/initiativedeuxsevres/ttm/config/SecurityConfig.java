@@ -92,8 +92,8 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((requests) ->
                         // nécessite d'être authentifié
-                        requests.requestMatchers("/ttm/**", "ttm/me/**").hasAnyRole("PARRAIN", "PORTEUR", "ADMIN")
-                                .requestMatchers("ttm/**").authenticated()
+                        requests
+                                .requestMatchers("/ttm/**").authenticated()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/auth/**").permitAll()
                                 .anyRequest().authenticated())
