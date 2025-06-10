@@ -1,6 +1,7 @@
 package fr.initiativedeuxsevres.ttm.domain.repositories;
 
 import fr.initiativedeuxsevres.ttm.domain.models.User;
+import fr.initiativedeuxsevres.ttm.web.dto.UserDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,5 +16,6 @@ public interface UserRepository {
 
     User updateUser(User user);
 
-    List<User> getAllUsers();
+    List<User> getAllUsers(User user);
+    List<User> getAllParrains(User parrains);
 }

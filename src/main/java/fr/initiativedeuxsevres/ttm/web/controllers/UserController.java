@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -37,5 +37,15 @@ public class UserController {
         User findUser = userService.findById(user.userId());
         UserDto userDto = userMapperDto.mapUserToUserDto(findUser);
         return ResponseEntity.ok(userDto);
+    }
+
+    @GetMapping("/profiles")
+    public List<User> getAllUsers(User user){
+        return userService.findAllUsers(user);
+    }
+
+    @GetMapping("/allProfiles")
+    public  List<User> getAllParrains(User parrains){
+        return userService.findAllParrains(parrains);
     }
 }
