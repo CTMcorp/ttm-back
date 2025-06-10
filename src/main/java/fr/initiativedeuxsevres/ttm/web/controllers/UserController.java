@@ -44,7 +44,7 @@ public class UserController {
         return userService.findAllUsers(user);
     }
 
-    @GetMapping("/allProfiles")
+    @GetMapping("/parrainsProfiles")
     public  List<User> getAllParrains(User parrains){
         return userService.findAllParrains(parrains);
     }
