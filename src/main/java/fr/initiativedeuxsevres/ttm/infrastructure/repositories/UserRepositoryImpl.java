@@ -53,17 +53,9 @@ public class UserRepositoryImpl implements UserRepository {
     public User updateUser(User user) {
         String query = "UPDATE users " +
                 "SET firstname = ?, lastname = ?, email = ?, password = ?, description = ?, photo = ? " +
-                "WHERE id = ? RETURNING *;";
+                "WHERE id = ? RETURNING *";
         return jdbcTemplate.queryForObject(query,
-            new Object[]{
-                    user.userId().toString(),
-                    user.firstname(),
-                    user.lastname(),
-                    user.email(),
-                    user.password(),
-                    user.description(),
-                    user.photo(),
-            }, (rs, rowNum) ->
+             (rs, rowNum) ->
                 fromRS(rs));
     }
 
