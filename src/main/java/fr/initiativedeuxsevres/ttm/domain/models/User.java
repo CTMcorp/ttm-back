@@ -16,6 +16,7 @@ public record User(
         String password,
         String description,
         String role,
+        String photo,
         List<SecteursActivites> secteursActivites,
         List<TypesAccompagnement> typesAccompagnements) implements UserDetails {
 

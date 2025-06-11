@@ -2,12 +2,10 @@ package fr.initiativedeuxsevres.ttm.domain.services.servicesimpl;
 
 import fr.initiativedeuxsevres.ttm.config.JwtTokenProvider;
 import fr.initiativedeuxsevres.ttm.domain.models.User;
-import fr.initiativedeuxsevres.ttm.domain.repositories.TypesAccompagnementRepository;
+import fr.initiativedeuxsevres.ttm.domain.models.UserUpdateRequest;
 import fr.initiativedeuxsevres.ttm.domain.repositories.UserRepository;
 import fr.initiativedeuxsevres.ttm.domain.services.UserService;
 import fr.initiativedeuxsevres.ttm.web.dto.LoginRequestDto;
-import fr.initiativedeuxsevres.ttm.web.dto.UserDto;
-import fr.initiativedeuxsevres.ttm.web.mapper.UserMapperDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,26 +16,21 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final TypesAccompagnementRepository typesAccompagnementRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserMapperDto userMapperDto;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, TypesAccompagnementRepository typesAccompagnementRepository, PasswordEncoder passwordEncoder, @Lazy AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserMapperDto userMapperDto) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, @Lazy AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
-        this.typesAccompagnementRepository = typesAccompagnementRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.userMapperDto = userMapperDto;
     }
 
     @Override
@@ -78,4 +71,24 @@ public class UserServiceImpl implements UserService {
     public User findById(UUID userId) {
         return userRepository.findById(userId);
     }
+
+    @Override
+    public User updateUser(UUID userId, UserUpdateRequest userUpdateRequest) {
+        User existingUser = userRepository.findById(userId);
+
+        User updateUser = new User(
+                existingUser.userId(),
+                userUpdateRequest.firstname() != null ? userUpdateRequest.firstname() : existingUser.firstname(),
+                userUpdateRequest.lastname() != null ? userUpdateRequest.lastname() : existingUser.lastname(),
+                userUpdateRequest.email() != null ? userUpdateRequest.email() : existingUser.email(),
+                userUpdateRequest.password() != null ? userUpdateRequest.password() : existingUser.password(),
+                userUpdateRequest.description() != null ? userUpdateRequest.description() : existingUser.description(),
+                userUpdateRequest.photo() != null ? userUpdateRequest.photo() : existingUser.photo(),
+                existingUser.role(),
+                existingUser.secteursActivites(),
+                existingUser.typesAccompagnements()
+        );
+        return userRepository.updateUser(updateUser);
+    }
+
 }

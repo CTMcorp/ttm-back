@@ -6,6 +6,7 @@ import fr.initiativedeuxsevres.ttm.domain.repositories.TypesAccompagnementReposi
 import fr.initiativedeuxsevres.ttm.web.dto.SecteursActivitesDto;
 import fr.initiativedeuxsevres.ttm.web.dto.TypesAccompagnementDto;
 import fr.initiativedeuxsevres.ttm.web.dto.UserDto;
+import fr.initiativedeuxsevres.ttm.web.dto.UserUpdateDto;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -38,7 +39,25 @@ public class UserMapperDto {
                 user.email(),
                 user.description(),
                 user.role(),
+                user.photo(),
                 secteurs,
                 types);
     }
+
+
+    public static User copyWith(User original, UserUpdateDto dto) {
+        return new User(
+            original.userId(),
+            dto.firstname(),
+            dto.lastname(),
+            original.email(),
+            original.password(),
+            dto.description(),
+            original.role(),
+            dto.photo(),
+            dto.secteursActivites(),
+            dto.typesAccompagnements()
+            );
+    }
+
 }
