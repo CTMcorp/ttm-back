@@ -39,6 +39,12 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable UUID userId) {
+        User findUser = userService.findById(userId);
+        UserDto userDto = userMapperDto.mapUserToUserDto(findUser);
+        return ResponseEntity.ok(userDto);
+    }
 
     @GetMapping("/profiles")
     public List<User> getAllUsers(){
