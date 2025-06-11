@@ -66,6 +66,12 @@ public class UserRepositoryImpl implements UserRepository {
                 fromRS(rs));
     }
 
+    @Override
+    public void deleteUser(UUID userId) {
+        String deleteQuery = "DELETE FROM users WHERE id = ?";
+        jdbcTemplate.update(deleteQuery, userId.toString());
+    }
+
     //Méthode pour récup tous les users afin que les admin puissent voir tous les profils
     @Override
     public List<User> getAllUsers() {

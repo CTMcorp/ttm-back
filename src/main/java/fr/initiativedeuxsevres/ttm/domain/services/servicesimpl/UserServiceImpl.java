@@ -6,7 +6,6 @@ import fr.initiativedeuxsevres.ttm.domain.models.UserUpdateRequest;
 import fr.initiativedeuxsevres.ttm.domain.repositories.UserRepository;
 import fr.initiativedeuxsevres.ttm.domain.services.UserService;
 import fr.initiativedeuxsevres.ttm.web.dto.LoginRequestDto;
-import fr.initiativedeuxsevres.ttm.web.mapper.UserMapperDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -101,5 +100,10 @@ public class UserServiceImpl implements UserService {
                 existingUser.typesAccompagnements()
         );
         return userRepository.updateUser(updateUser);
+    }
+
+    @Override
+    public void deleteUser(UUID userId) {
+        userRepository.deleteUser(userId);
     }
 }

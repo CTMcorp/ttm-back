@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserDto> getUser(Authentication authentication) {
+    public ResponseEntity<UserDto> getUserAuthenticated(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             log.warn("Authentication null or unauthenticated");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -61,5 +61,10 @@ public class UserController {
         User updatedUser = userService.updateUser(userId, updateRequest);
         UserDto userDto = userMapperDto.mapUserToUserDto(updatedUser);
         return ResponseEntity.ok(userDto);
+    }
+
+    @DeleteMapping("/{userId}")
+    public void deleteUser(@PathVariable UUID userId) {
+        userService.deleteUser(userId);
     }
 }
