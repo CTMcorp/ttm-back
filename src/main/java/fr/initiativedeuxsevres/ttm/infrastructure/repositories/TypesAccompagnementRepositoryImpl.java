@@ -21,48 +21,23 @@ public class TypesAccompagnementRepositoryImpl implements TypesAccompagnementRep
     }
 
     @Override
-    public User addUserType(UUID userId, int typeId) {
+    public List<TypesAccompagnement> addUserType(UUID userId, int typeId) {
         String insert = "INSERT INTO users_types (users_id, types_id_number) VALUES (?, ?)";
         jdbcTemplate.update(insert, userId, typeId);
 
-        return findUserWithTypes(userId);
+        return findTypesByUserId(userId);
     }
 
     @Override
-    public List<TypesAccompagnement> updateUserTypes(UUID userId, List<TypesAccompagnement> types) {
-        String queryDelete = "DELETE FROM users_types WHERE users_id = ?";
-        jdbcTemplate.update(queryDelete, userId.toString());
-
-        if (types != null && !types.isEmpty()) {
-            for (TypesAccompagnement type : types) {
-                String queryInsert = "INSERT INTO users_types (users_id, types_id_number) VALUES(?, ?)";
-                jdbcTemplate.update(queryInsert, userId.toString(), type.name());
-            }
-        }
-
-        // Requête pour récupérer les secteurs mis à jour
-        String querySelect = "SELECT types_id_number FROM users_types WHERE users_id = ?";
-        List<String> typeNames = jdbcTemplate.queryForList(querySelect, new Object[]{userId.toString()}, String.class);
-
-        return typeNames.stream()
-                .map(TypesAccompagnement::valueOf)
-                .toList();
-    }
-
-    private User findUserWithTypes(UUID userId) {
-        String query = "SELECT * FROM users WHERE id = ?";
-
-        User user = jdbcTemplate.queryForObject(query, new Object[]{userId.toString()}, (rs, rowNum) ->
-                userRepository.fromRS(rs));
-
-        List<TypesAccompagnement> types = findTypesByUserId(userId);
-        user.typesAccompagnements().addAll(types);
-        return user;
+    public List<TypesAccompagnement> deleteUserType(UUID userId, int typeId) {
+        String deleteQuery = "DELETE FROM users_types WHERE users_id = ? AND types_id_number = ?";
+        jdbcTemplate.update(deleteQuery, userId.toString(), typeId);
+        return findTypesByUserId(userId);
     }
 
     @Override
     public List<TypesAccompagnement> findTypesByUserId(UUID userId) {
-        String query = "SELECT types.name FROM types JOIN users_types ut ON types.id_number = ut.types_id_number WHERE ut.users_id = ?";
+        String query = "SELECT types_id_number, types.name FROM users_types JOIN types ON users_types.types_id_number = types.id_number WHERE users_id = ?";
         return jdbcTemplate.query(query, new Object[]{userId.toString()}, (rs, rowNum) -> {
             String typeName = rs.getString("name");
             return TypesAccompagnement.fromLabel(typeName);
