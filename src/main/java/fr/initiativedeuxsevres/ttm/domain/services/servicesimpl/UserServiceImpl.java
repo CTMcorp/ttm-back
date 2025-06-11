@@ -95,8 +95,8 @@ public class UserServiceImpl implements UserService {
                 userUpdateRequest.email() != null ? userUpdateRequest.email() : existingUser.email(),
                 userUpdateRequest.password() != null ? userUpdateRequest.password() : existingUser.password(),
                 userUpdateRequest.description() != null ? userUpdateRequest.description() : existingUser.description(),
-                userUpdateRequest.photo() != null ? userUpdateRequest.photo() : existingUser.photo(),
                 existingUser.role(),
+                userUpdateRequest.photo() != null ? userUpdateRequest.photo() : existingUser.photo(),
                 existingUser.secteursActivites(),
                 existingUser.typesAccompagnements()
         );

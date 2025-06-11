@@ -51,10 +51,17 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User updateUser(User user) {
-        String query = "UPDATE users " +
-                "SET firstname = ?, lastname = ?, email = ?, password = ?, description = ?, photo = ? " +
-                "WHERE id = ? RETURNING *";
+        String query = "UPDATE users SET firstname = ?, lastname = ?, email = ?, password = ?, description = ?, photo = ? WHERE id = ? returning *";
         return jdbcTemplate.queryForObject(query,
+             new Object[]{
+                     user.firstname(),
+                     user.lastname(),
+                     user.email(),
+                     user.password(),
+                     user.description(),
+                     user.photo(),
+                     user.userId().toString()
+             },
              (rs, rowNum) ->
                 fromRS(rs));
     }
