@@ -6,7 +6,6 @@ import fr.initiativedeuxsevres.ttm.domain.repositories.TypesAccompagnementReposi
 import fr.initiativedeuxsevres.ttm.domain.repositories.UserRepository;
 import fr.initiativedeuxsevres.ttm.domain.services.UserService;
 import fr.initiativedeuxsevres.ttm.web.dto.LoginRequestDto;
-import fr.initiativedeuxsevres.ttm.web.dto.UserDto;
 import fr.initiativedeuxsevres.ttm.web.mapper.UserMapperDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -84,7 +83,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.getAllUsers(user);
     }
 
-    public List<User> findAllParrains(User parrains){
-        return userRepository.getAllParrains(parrains);
+    public List<User> findAllParrains(){
+        return userRepository.getAllParrains();
     }
 }

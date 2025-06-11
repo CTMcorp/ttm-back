@@ -2,15 +2,12 @@ package fr.initiativedeuxsevres.ttm.infrastructure.repositories;
 
 import fr.initiativedeuxsevres.ttm.domain.models.User;
 import fr.initiativedeuxsevres.ttm.domain.repositories.UserRepository;
-import fr.initiativedeuxsevres.ttm.web.dto.UserDto;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -95,7 +92,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     //Méthode pour que les porteurs voient les parrains
-    public List<User>getAllParrains(User parrains){
+    public List<User>getAllParrains(){
         String query = "SELECT * FROM users WHERE role = 'PARRAIN'";
         return jdbcTemplate.query(query, (rs, rowNum) ->
                 new User(

@@ -2,7 +2,6 @@ package fr.initiativedeuxsevres.ttm.domain.services;
 
 import fr.initiativedeuxsevres.ttm.domain.models.User;
 import fr.initiativedeuxsevres.ttm.web.dto.LoginRequestDto;
-import fr.initiativedeuxsevres.ttm.web.dto.UserDto;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -20,6 +19,6 @@ public interface UserService extends UserDetailsService {
 
     List<User> findAllUsers(User user);
 
-    List <User> findAllParrains(User parrains);
+    List <User> findAllParrains();
 
 }

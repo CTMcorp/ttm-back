@@ -44,8 +44,12 @@ public class UserController {
         return userService.findAllUsers(user);
     }
 
+//    @GetMapping("/parrainsProfiles")
+//    public  List<User> getAllParrains(User parrains){
+//        return userService.findAllParrains(parrains);
+//    }
     @GetMapping("/parrainsProfiles")
-    public  List<User> getAllParrains(User parrains){
-        return userService.findAllParrains(parrains);
+    public  List<User> getAllParrains(){
+        return userService.findAllParrains();
     }
 }
