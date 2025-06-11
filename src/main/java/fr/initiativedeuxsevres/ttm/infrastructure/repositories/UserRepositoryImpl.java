@@ -69,7 +69,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     //Méthode pour récup tous les users afin que les admin puissent voir tous les profils
     @Override
-    public List<User> getAllUsers(User user) {
+    public List<User> getAllUsers() {
         String query = "SELECT * FROM users";
         return jdbcTemplate.query(query, (rs, rowNum) ->
                 new User(
@@ -80,6 +80,7 @@ public class UserRepositoryImpl implements UserRepository {
                         rs.getString("password"),
                         rs.getString("description"),
                         rs.getString("role"),
+                        rs.getString("photo"),
                         new ArrayList<>(),
                         new ArrayList<>()
                 )
@@ -98,6 +99,7 @@ public class UserRepositoryImpl implements UserRepository {
                         rs.getString("password"),
                         rs.getString("description"),
                         rs.getString("role"),
+                        rs.getString("photo"),
                         new ArrayList<>(),
                         new ArrayList<>()
                 )

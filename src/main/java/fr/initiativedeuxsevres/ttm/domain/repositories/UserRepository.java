@@ -16,7 +16,6 @@ public interface UserRepository {
 
     User updateUser(User user);
 
-
     List<User> getAllUsers();
     List<User> getAllParrains();
 
