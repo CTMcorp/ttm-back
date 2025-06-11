@@ -40,11 +40,20 @@ public class UserController {
     }
 
 
+    @GetMapping("/profiles")
+    public List<User> getAllUsers(){
+        return userService.findAllUsers();
+    }
+
+    @GetMapping("/parrainsProfiles")
+    public  List<User> getAllParrains(){
+        return userService.findAllParrains();
+    }
+
     @PutMapping("/{userId}")
     public ResponseEntity<UserDto> updateUser(@PathVariable UUID userId, @RequestBody UserUpdateRequest updateRequest) {
         User updatedUser = userService.updateUser(userId, updateRequest);
         UserDto userDto = userMapperDto.mapUserToUserDto(updatedUser);
         return ResponseEntity.ok(userDto);
     }
-
 }

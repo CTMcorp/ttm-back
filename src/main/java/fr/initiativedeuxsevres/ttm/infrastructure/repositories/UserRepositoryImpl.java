@@ -2,6 +2,7 @@ package fr.initiativedeuxsevres.ttm.infrastructure.repositories;
 
 import fr.initiativedeuxsevres.ttm.domain.models.User;
 import fr.initiativedeuxsevres.ttm.domain.repositories.UserRepository;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -66,9 +67,41 @@ public class UserRepositoryImpl implements UserRepository {
                 fromRS(rs));
     }
 
+    //Méthode pour récup tous les users afin que les admin puissent voir tous les profils
     @Override
-    public List<User> getAllUsers() {
-        return List.of();
+    public List<User> getAllUsers(User user) {
+        String query = "SELECT * FROM users";
+        return jdbcTemplate.query(query, (rs, rowNum) ->
+                new User(
+                        UUID.fromString(rs.getString("id")),
+                        rs.getString("firstname"),
+                        rs.getString("lastname"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("description"),
+                        rs.getString("role"),
+                        new ArrayList<>(),
+                        new ArrayList<>()
+                )
+        );
+    }
+
+    //Méthode pour que les porteurs voient les parrains
+    public List<User>getAllParrains(){
+        String query = "SELECT * FROM users WHERE role = 'PARRAIN'";
+        return jdbcTemplate.query(query, (rs, rowNum) ->
+                new User(
+                        UUID.fromString(rs.getString("id")),
+                        rs.getString("firstname"),
+                        rs.getString("lastname"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("description"),
+                        rs.getString("role"),
+                        new ArrayList<>(),
+                        new ArrayList<>()
+                )
+        );
     }
 
     @Override

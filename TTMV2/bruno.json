@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "TTMV2",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

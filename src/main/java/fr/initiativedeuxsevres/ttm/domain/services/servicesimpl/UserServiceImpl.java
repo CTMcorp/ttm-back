@@ -6,6 +6,7 @@ import fr.initiativedeuxsevres.ttm.domain.models.UserUpdateRequest;
 import fr.initiativedeuxsevres.ttm.domain.repositories.UserRepository;
 import fr.initiativedeuxsevres.ttm.domain.services.UserService;
 import fr.initiativedeuxsevres.ttm.web.dto.LoginRequestDto;
+import fr.initiativedeuxsevres.ttm.web.mapper.UserMapperDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -73,6 +75,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findAllUsers(){
+        return userRepository.getAllUsers();
+    }
+
+    @Override
+    public List<User> findAllParrains(){
+        return userRepository.getAllParrains();
+    }
+  
+    @Override
     public User updateUser(UUID userId, UserUpdateRequest userUpdateRequest) {
         User existingUser = userRepository.findById(userId);
 
@@ -90,5 +102,4 @@ public class UserServiceImpl implements UserService {
         );
         return userRepository.updateUser(updateUser);
     }
-
 }
