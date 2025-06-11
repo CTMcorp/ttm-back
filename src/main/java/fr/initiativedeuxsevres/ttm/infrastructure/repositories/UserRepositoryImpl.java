@@ -6,6 +6,8 @@ import fr.initiativedeuxsevres.ttm.domain.repositories.UserRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,17 +33,8 @@ public class UserRepositoryImpl implements UserRepository {
     public User logIn(String email) {
         String query = "SELECT * FROM users LEFT JOIN users_secteurs us ON users.id = us.users_id WHERE email = ?";
 
-        List<User> users = jdbcTemplate.query(query, new Object[]{email}, (rs, rowNum) -> new User(
-                UUID.fromString(rs.getString("id")),
-                rs.getString("firstname"),
-                rs.getString("lastname"),
-                rs.getString("email"),
-                rs.getString("password"),
-                rs.getString("description"),
-                rs.getString("role"),
-                new ArrayList<>(),
-                new ArrayList<>()
-        ));
+        List<User> users = jdbcTemplate.query(query, new Object[]{email}, (rs, rowNum) ->
+                fromRS(rs));
         if(users.isEmpty()) {
             return null;
         }
@@ -53,23 +46,25 @@ public class UserRepositoryImpl implements UserRepository {
         String query = "SELECT * FROM users WHERE id = ?";
         return jdbcTemplate.queryForObject(query,
                 new Object[]{userId.toString()}, (rs, rowNum) ->
-                        new User(
-                                UUID.fromString(rs.getString("id")),
-                                rs.getString("firstname"),
-                                rs.getString("lastname"),
-                                rs.getString("email"),
-                                rs.getString("password"),
-                                rs.getString("description"),
-                                rs.getString("role"),
-                                new ArrayList<>(),
-                                new ArrayList<>()
-                        ));
+                        fromRS(rs));
     }
 
     @Override
     public User updateUser(User user) {
-        String query = "SELECT * FROM users WHERE id = ?";
-        return null;
+        String query = "UPDATE users " +
+                "SET firstname = ?, lastname = ?, email = ?, password = ?, description = ?, photo = ? " +
+                "WHERE id = ? RETURNING *;";
+        return jdbcTemplate.queryForObject(query,
+            new Object[]{
+                    user.userId().toString(),
+                    user.firstname(),
+                    user.lastname(),
+                    user.email(),
+                    user.password(),
+                    user.description(),
+                    user.photo(),
+            }, (rs, rowNum) ->
+                fromRS(rs));
     }
 
     //Méthode pour récup tous les users afin que les admin puissent voir tous les profils
@@ -109,6 +104,19 @@ public class UserRepositoryImpl implements UserRepository {
         );
     }
 
-
-
+    @Override
+    public User fromRS(ResultSet rs) throws SQLException {
+        return new User(
+                UUID.fromString(rs.getString("id")),
+                rs.getString("firstname"),
+                rs.getString("lastname"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getString("description"),
+                rs.getString("role"),
+                rs.getString("photo"),
+                new ArrayList<>(),
+                new ArrayList<>()
+        );
+    }
 }

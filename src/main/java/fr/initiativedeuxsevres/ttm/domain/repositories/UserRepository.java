@@ -2,6 +2,8 @@ package fr.initiativedeuxsevres.ttm.domain.repositories;
 
 import fr.initiativedeuxsevres.ttm.domain.models.User;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +16,9 @@ public interface UserRepository {
 
     User updateUser(User user);
 
-    List<User> getAllUsers(User user);
+
+    List<User> getAllUsers();
     List<User> getAllParrains();
+
+    User fromRS(ResultSet rs) throws SQLException;
 }

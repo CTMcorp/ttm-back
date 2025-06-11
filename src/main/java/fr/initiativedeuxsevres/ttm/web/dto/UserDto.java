@@ -10,6 +10,7 @@ public record UserDto(
         String email,
         String description,
         String role,
+        String photo,
         List<SecteursActivitesDto> secteursActivites,
         List<TypesAccompagnementDto> typesAccompagnements
 ) {}

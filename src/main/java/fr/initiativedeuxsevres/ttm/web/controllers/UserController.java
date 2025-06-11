@@ -1,6 +1,7 @@
 package fr.initiativedeuxsevres.ttm.web.controllers;
 
 import fr.initiativedeuxsevres.ttm.domain.models.User;
+import fr.initiativedeuxsevres.ttm.domain.models.UserUpdateRequest;
 import fr.initiativedeuxsevres.ttm.domain.services.UserService;
 import fr.initiativedeuxsevres.ttm.web.dto.UserDto;
 import fr.initiativedeuxsevres.ttm.web.mapper.UserMapperDto;
@@ -8,11 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -39,17 +39,21 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
+
     @GetMapping("/profiles")
-    public List<User> getAllUsers(User user){
-        return userService.findAllUsers(user);
+    public List<User> getAllUsers(){
+        return userService.findAllUsers();
     }
 
-//    @GetMapping("/parrainsProfiles")
-//    public  List<User> getAllParrains(User parrains){
-//        return userService.findAllParrains(parrains);
-//    }
     @GetMapping("/parrainsProfiles")
     public  List<User> getAllParrains(){
         return userService.findAllParrains();
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable UUID userId, @RequestBody UserUpdateRequest updateRequest) {
+        User updatedUser = userService.updateUser(userId, updateRequest);
+        UserDto userDto = userMapperDto.mapUserToUserDto(updatedUser);
+        return ResponseEntity.ok(userDto);
     }
 }
