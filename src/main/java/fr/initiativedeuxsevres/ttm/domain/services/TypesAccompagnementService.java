@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TypesAccompagnementService {
-    List<TypesAccompagnement> addUserType(UUID userId, int typeId);
-    List<TypesAccompagnement> deleteUserType(UUID userId, int typeId);
+    User addUserType(UUID userId, int typeId);
+
     List<TypesAccompagnement> findTypesByUserId(UUID userId);
+
     List<TypesAccompagnement> findAllTypes();
 }

@@ -77,3 +77,18 @@ INSERT INTO types(name, id_number) VALUES ('Ressources humaines', 1),
                                ('Informatique', 4),
                                ('Commercial et communication', 5);
 
+--changeset ttm:2
+
+DROP TABLE IF EXISTS toolbox;
+
+CREATE TABLE IF NOT EXISTS document (
+    id UUID default(gen_random_uuid()) primary key,
+    nom text,
+    fichier_pdf bytea
+    );
+
+-- changeset ttm:3
+ALTER TABLE document
+    ADD COLUMN user_id varchar(36),
+    ADD CONSTRAINT fk_document_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+--rollback drop table document

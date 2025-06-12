@@ -18,13 +18,8 @@ public class SecteursActivitesServiceImpl implements SecteursActivitesService {
     }
 
     @Override
-    public List<SecteursActivites> addUserSecteur(UUID userId, int secteurId) {
+    public User addUserSecteur(UUID userId, int secteurId) {
         return secteursActivitesRepository.addUserSecteur(userId, secteurId);
-    }
-
-    @Override
-    public List<SecteursActivites> deleteUserSecteur(UUID userId, int secteurId) {
-        return secteursActivitesRepository.deleteUserSecteur(userId, secteurId);
     }
 
     @Override
