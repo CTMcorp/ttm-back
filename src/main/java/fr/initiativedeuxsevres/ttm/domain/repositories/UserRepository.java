@@ -9,17 +9,12 @@ import java.util.UUID;
 
 public interface UserRepository {
     User register(String firstname, String lastname, String email, String password, String role);
-
     User logIn(String email);
-
     User findById(UUID userId);
-
     User updateUser(User user);
-
+    void deleteUser(UUID userId);
     List<User> getAllUsers();
     List<User> getAllParrains();
-
     User fromRS(ResultSet rs) throws SQLException;
-
     UUID findIdByEmail(String email);
 }

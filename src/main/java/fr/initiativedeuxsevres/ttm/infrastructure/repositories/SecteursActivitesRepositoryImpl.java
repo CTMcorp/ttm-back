@@ -21,49 +21,23 @@ public class SecteursActivitesRepositoryImpl implements SecteursActivitesReposit
     }
 
     @Override
-    public User addUserSecteur(UUID userId, int secteurId) {
-        String insert = "INSERT INTO users_secteurs (users_id, secteurs_id_number) VALUES (?, ?)";
+    public List<SecteursActivites> addUserSecteur(UUID userId, int secteurId) {
+        String insert = "INSERT INTO users_secteurs (users_id, secteurs_id_number) VALUES (?, ?) ON CONFLICT DO NOTHING";
         jdbcTemplate.update(insert, userId, secteurId);
 
-        return findUserWithSecteurs(userId);
+        return findSecteursByUserId(userId);
     }
-
 
     @Override
-    public List<SecteursActivites> updateUserSecteurs(UUID userId, List<SecteursActivites> secteurs) {
-        String queryDelete = "DELETE FROM users_secteurs WHERE users_id = ?";
-        jdbcTemplate.update(queryDelete, userId.toString());
-
-        if (secteurs != null && !secteurs.isEmpty()) {
-            for (SecteursActivites secteur : secteurs) {
-            String queryInsert = "INSERT INTO users_secteurs (users_id, secteurs_id_number) VALUES(?, ?)";
-            jdbcTemplate.update(queryInsert, userId.toString(), secteur.name());
-            }
-        }
-
-        // Requête pour récupérer les secteurs mis à jour
-        String querySelect = "SELECT secteurs_id_number FROM users_secteurs WHERE users_id = ?";
-        List<String> secteurNames = jdbcTemplate.queryForList(querySelect, new Object[]{userId.toString()}, String.class);
-
-        return secteurNames.stream()
-                .map(SecteursActivites::valueOf)
-                .toList();
-    }
-
-
-    private User findUserWithSecteurs(UUID userId) {
-        String query = "SELECT * FROM users WHERE id = ?";
-
-        User user = jdbcTemplate.queryForObject(query, new Object[]{userId.toString()}, (rs, rowNum) ->
-                userRepository.fromRS(rs));
-        List<SecteursActivites> secteurs = findSecteursByUserId(userId);
-        user.secteursActivites().addAll(secteurs);
-        return user;
+    public List<SecteursActivites> deleteUserSecteur(UUID userId, int secteurId) {
+        String delete = "DELETE FROM users_secteurs WHERE users_id = ? AND secteurs_id_number = ?";
+        jdbcTemplate.update(delete, userId.toString(), secteurId);
+        return findSecteursByUserId(userId);
     }
 
     @Override
     public List<SecteursActivites> findSecteursByUserId(UUID userId) {
-        String query = "SELECT secteurs.name FROM secteurs JOIN users_secteurs us ON secteurs.id_number = us.secteurs_id_number WHERE us.users_id = ?";
+        String query = "SELECT secteurs_id_number, secteurs.name FROM users_secteurs JOIN secteurs ON users_secteurs.secteurs_id_number = secteurs.id_number WHERE users_id = ?";
         return jdbcTemplate.query(query, new Object[]{userId.toString()}, (rs, rowNum) -> {
             String secteurName = rs.getString("name");
             return SecteursActivites.fromLabel(secteurName);
@@ -78,4 +52,3 @@ public class SecteursActivitesRepositoryImpl implements SecteursActivitesReposit
         });
     }
 }
-

@@ -18,8 +18,13 @@ public class TypesAccompagnementServiceImpl implements TypesAccompagnementServic
     }
 
     @Override
-    public User addUserType(UUID userId, int typeId) {
+    public List<TypesAccompagnement> addUserType(UUID userId, int typeId) {
         return typesAccompagnementRepository.addUserType(userId, typeId);
+    }
+
+    @Override
+    public List<TypesAccompagnement> deleteUserType(UUID userId, int typeId) {
+        return typesAccompagnementRepository.deleteUserType(userId, typeId);
     }
 
     @Override

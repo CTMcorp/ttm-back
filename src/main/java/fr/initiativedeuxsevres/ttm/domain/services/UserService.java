@@ -15,19 +15,12 @@ import java.util.UUID;
 
 public interface UserService extends UserDetailsService {
     User register(String firstname, String lastname, String email, String password, String role);
-
     User loadUserByUsername(String email);
-
     String logIn(LoginRequestDto loginRequestDto);
-
     User findById(UUID userId);
-
     List<User> findAllUsers();
-
     List <User> findAllParrains();
-
     User updateUser(UUID userId, UserUpdateRequest userUpdateRequest);
-
+    void deleteUser(UUID userId);
     UUID findUserIdByEmail(String email);
-
 }

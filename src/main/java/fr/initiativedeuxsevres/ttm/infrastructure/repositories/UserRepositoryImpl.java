@@ -51,20 +51,25 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User updateUser(User user) {
-        String query = "UPDATE users " +
-                "SET firstname = ?, lastname = ?, email = ?, password = ?, description = ?, photo = ? " +
-                "WHERE id = ? RETURNING *;";
+        String query = "UPDATE users SET firstname = ?, lastname = ?, email = ?, password = ?, description = ?, photo = ? WHERE id = ? returning *";
         return jdbcTemplate.queryForObject(query,
-            new Object[]{
-                    user.userId().toString(),
-                    user.firstname(),
-                    user.lastname(),
-                    user.email(),
-                    user.password(),
-                    user.description(),
-                    user.photo(),
-            }, (rs, rowNum) ->
-                fromRS(rs));
+                new Object[]{
+                        user.firstname(),
+                        user.lastname(),
+                        user.email(),
+                        user.password(),
+                        user.description(),
+                        user.photo(),
+                        user.userId().toString()
+                },
+                (rs, rowNum) ->
+                        fromRS(rs));
+    }
+
+    @Override
+    public void deleteUser(UUID userId) {
+        String deleteQuery = "DELETE FROM users WHERE id = ?";
+        jdbcTemplate.update(deleteQuery, userId.toString());
     }
 
     //Méthode pour récup tous les users afin que les admin puissent voir tous les profils
@@ -87,14 +92,6 @@ public class UserRepositoryImpl implements UserRepository {
         );
     }
 
-    public UUID findIdByEmail(String email) {
-        String query = "SELECT id FROM users WHERE email = ?";
-        List<UUID> ids = jdbcTemplate.query(query, new Object[]{email}, (rs, rowNum) ->
-                UUID.fromString(rs.getString("id"))
-        );
-        return ids.isEmpty() ? null : ids.get(0);
-    }
-
     //Méthode pour que les porteurs voient les parrains
     public List<User>getAllParrains(){
         String query = "SELECT * FROM users WHERE role = 'PARRAIN'";
@@ -112,6 +109,14 @@ public class UserRepositoryImpl implements UserRepository {
                         new ArrayList<>()
                 )
         );
+    }
+
+    public UUID findIdByEmail(String email) {
+        String query = "SELECT id FROM users WHERE email = ?";
+        List<UUID> ids = jdbcTemplate.query(query, new Object[]{email}, (rs, rowNum) ->
+                UUID.fromString(rs.getString("id"))
+        );
+        return ids.isEmpty() ? null : ids.get(0);
     }
 
     @Override

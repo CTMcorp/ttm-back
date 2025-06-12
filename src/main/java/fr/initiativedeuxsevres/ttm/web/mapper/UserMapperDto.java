@@ -47,17 +47,17 @@ public class UserMapperDto {
 
     public static User copyWith(User original, UserUpdateDto dto) {
         return new User(
-            original.userId(),
-            dto.firstname(),
-            dto.lastname(),
-            original.email(),
-            original.password(),
-            dto.description(),
-            original.role(),
-            dto.photo(),
-            dto.secteursActivites(),
-            dto.typesAccompagnements()
-            );
+                original.userId(),
+                dto.firstname(),
+                dto.lastname(),
+                original.email(),
+                original.password(),
+                dto.description(),
+                original.role(),
+                dto.photo(),
+                dto.secteursActivites(),
+                dto.typesAccompagnements()
+        );
     }
 
 }
