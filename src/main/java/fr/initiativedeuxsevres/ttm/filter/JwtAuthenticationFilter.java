@@ -19,7 +19,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -39,30 +38,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
-        // récup le token jwt de la requete
-        String token = getTokenFromRequest(request);
+            // récup le token jwt de la requete
+            String token = getTokenFromRequest(request);
 
-        // si le token est présent et valide
-        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-            // recup username à partir du token
-            String username = jwtTokenProvider.getUsername(token);
-            String role = jwtTokenProvider.getRole(token);
-            // charge details du user
-            UserDetails userDetails = userService.loadUserByUsername(username);
-            // création d'un objet d'authentication
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    Collections.singletonList(new SimpleGrantedAuthority(role))
+            // Déclare les variables avant le if
+            String username = null;
+            String role = null;
 
-            );
-            // ajoute des détails supplémentaires à l'authentication
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            // définit l'auth dans le contexte de sécurité
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        }
-        // continue le filtrage de la requete
-        filterChain.doFilter(request, response);
+            // si le token est présent et valide
+            if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
+                username = jwtTokenProvider.getUsername(token);
+                role = jwtTokenProvider.getRole(token);
+                UserDetails userDetails = userService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        List.of(new SimpleGrantedAuthority(role))
+                );
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+            filterChain.doFilter(request, response);
     }
 
     // méthode pour extraire le token du header de la requete

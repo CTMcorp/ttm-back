@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserDto> getUserAuthenticated(Authentication authentication) {
+    public ResponseEntity<UserDto> getUser(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             log.warn("Authentication null or unauthenticated");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -39,12 +39,6 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable UUID userId) {
-        User findUser = userService.findById(userId);
-        UserDto userDto = userMapperDto.mapUserToUserDto(findUser);
-        return ResponseEntity.ok(userDto);
-    }
 
     @GetMapping("/profiles")
     public List<User> getAllUsers(){
@@ -61,10 +55,5 @@ public class UserController {
         User updatedUser = userService.updateUser(userId, updateRequest);
         UserDto userDto = userMapperDto.mapUserToUserDto(updatedUser);
         return ResponseEntity.ok(userDto);
-    }
-
-    @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable UUID userId) {
-        userService.deleteUser(userId);
     }
 }
