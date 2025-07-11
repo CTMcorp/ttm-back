@@ -10,13 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageRequest {
-
     private String content;
-
+    private String receiver;
     public String getContent() {
         return content;
     }
-
     public void setContent(String content) {
         this.content = content;
     }

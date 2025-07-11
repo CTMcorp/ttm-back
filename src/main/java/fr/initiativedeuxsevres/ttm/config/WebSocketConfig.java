@@ -10,15 +10,21 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
+    private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
+    private final WebSocketMessageHandler webSocketMessageHandler;
 
-    /// injection de KafkaTemplate pour pouvoir envoyer les messages à Kafka
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    public WebSocketConfig(JwtHandshakeInterceptor jwtHandshakeInterceptor, WebSocketMessageHandler webSocketMessageHandler) {
+        this.jwtHandshakeInterceptor = jwtHandshakeInterceptor;
+        this.webSocketMessageHandler = webSocketMessageHandler;
+    }
 
     ///  enregistre un gestionnaire sur l'url /ws
     /// lorsqu'on se connecte à /ws, on utilise WebSocketMessageHandler pour la gestion des messages
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new WebSocketMessageHandler(kafkaTemplate), "/ws").setAllowedOrigins("*");
+        registry.addHandler(webSocketMessageHandler, "/ws")
+                .addInterceptors(jwtHandshakeInterceptor)
+                .setAllowedOrigins("http://localhost:5173")
+                .withSockJS();
     }
 }

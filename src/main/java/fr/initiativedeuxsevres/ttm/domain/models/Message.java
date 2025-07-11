@@ -13,9 +13,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @Document(collection = "messages")
 public class Message {
-
     @Id
     private String id;
     private String content;
-
+    private String sender;
+    private String receiver;
 }

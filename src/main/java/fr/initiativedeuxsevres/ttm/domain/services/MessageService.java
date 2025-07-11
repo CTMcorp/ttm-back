@@ -16,9 +16,12 @@ public class MessageService {
     }
 
     /// crée un nouvel objet Message et le sauvegarde en base
-    public Message saveMessage(String content) {
-        Message message = new Message();
-        message.setContent(content);
+    public Message saveMessage(String content, String sender, String receiver) {
+        Message message = Message.builder()
+                .content(content)
+                .sender(sender)
+                .receiver(receiver)
+                .build();
         return messageRepository.save(message);
     }
 

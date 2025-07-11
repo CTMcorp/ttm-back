@@ -14,25 +14,15 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-    // injecte le secret key
     @Value("${security.jwt.token.secret-key}")
     private String jwtSecret;
-
     @Value("${security.jwt.token.expiration-milliseconds}")
     private long jwtExpiration;
-
-    // méthode pour générer un token pour un user authentifié
     public String generateToken(Authentication authentication) {
-        // récup le username
         String username = authentication.getName();
-        // récup le role
         String role = authentication.getAuthorities().toString();
-
         Date currentDate = new Date();
-        // date d'expiration du token
         Date expireDate = new Date(currentDate.getTime() + jwtExpiration);
-
-        // construction du token
         return Jwts.builder()
                 .subject(username) // définit le sujet du token
                 .claim("role", role)
@@ -41,14 +31,9 @@ public class JwtTokenProvider {
                 .signWith(key()) // signe le token avec la secret key
                 .compact(); // compacte le token en une chaine
     }
-
-    // méthode pour générer la secret key pour signer le token
     public SecretKey key() {
-        // décode la secret key et génère une clé HMAC
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
-
-    // méthode pour récup le username à partir du token
     public String getUsername(String token) {
         return Jwts.parser() // crée un parser
                 .verifyWith(key())
@@ -57,7 +42,6 @@ public class JwtTokenProvider {
                 .getPayload() // recup le payload du token
                 .getSubject(); // recup le username
     }
-
     public String getRole(String token) {
         return Jwts.parser()
                 .verifyWith(key())
@@ -66,7 +50,6 @@ public class JwtTokenProvider {
                 .getPayload()
                 .get("role", String.class);
     }
-
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
@@ -77,6 +60,5 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
-
     }
 }

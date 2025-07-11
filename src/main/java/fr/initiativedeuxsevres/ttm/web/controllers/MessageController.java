@@ -35,7 +35,7 @@ public class MessageController {
         /// récupère tous les messages et les transforme en objets MessageResponse
         List<Message> messages = messageService.getAllMessages();
         List<MessageResponse> messageResponses = messages.stream().map(
-                message -> new MessageResponse(message.getId(), message.getContent())
+                message -> new MessageResponse(message.getId(), message.getContent(), message.getSender(), message.getReceiver())
         ).toList();
         return ResponseEntity.ok(messageResponses);
     }

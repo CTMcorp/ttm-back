@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageResponse {
-
     private String id;
     private String content;
-
+    private String sender;
+    private String receiver;
 }

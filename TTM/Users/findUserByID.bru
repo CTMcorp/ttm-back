@@ -1,0 +1,15 @@
+meta {
+  name: findUserByID
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8080/users/fb094943-2993-4655-8091-7ac1e71b4356
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJtYXJpZUB0Y2h0LmNvbSIsInJvbGUiOiJbUk9MRV9BRE1JTl0iLCJpYXQiOjE3NDk3MzI3MjMsImV4cCI6MTc1MDMzNzUyM30.McoiT_V9SpR5usFrknPAifECjrD0aPBY8_fDAGQNK7kFNrK8miBLB1oEcpYqYddl
+}

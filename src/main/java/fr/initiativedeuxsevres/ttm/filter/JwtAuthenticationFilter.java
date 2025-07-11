@@ -25,27 +25,19 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserServiceImpl userService;
-
     @Autowired
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, @Lazy UserServiceImpl userService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
     }
-
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-
-            // récup le token jwt de la requete
             String token = getTokenFromRequest(request);
-
-            // Déclare les variables avant le if
             String username = null;
             String role = null;
-
-            // si le token est présent et valide
             if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
                 username = jwtTokenProvider.getUsername(token);
                 role = jwtTokenProvider.getRole(token);
@@ -60,16 +52,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
     }
-
-    // méthode pour extraire le token du header de la requete
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        // si le header contient un token et commence par Bearer
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            // extrait le token sans Bearer
             return bearerToken.substring(7);
         }
-        // return null si aucun token trouvé
         return null;
     }
 }

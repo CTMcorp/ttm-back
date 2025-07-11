@@ -1,0 +1,15 @@
+meta {
+  name: getAllUsers
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:8080/users/profiles
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: http://localhost:8080/users/profiles
+}
