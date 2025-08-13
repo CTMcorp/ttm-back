@@ -1,20 +1,20 @@
 package fr.initiativedeuxsevres.ttm.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 @Configuration
 @EnableWebSocket
+@Slf4j
 public class WebSocketConfig implements WebSocketConfigurer {
-    private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
     private final WebSocketMessageHandler webSocketMessageHandler;
 
-    public WebSocketConfig(JwtHandshakeInterceptor jwtHandshakeInterceptor, WebSocketMessageHandler webSocketMessageHandler) {
-        this.jwtHandshakeInterceptor = jwtHandshakeInterceptor;
+    public WebSocketConfig( WebSocketMessageHandler webSocketMessageHandler) {
         this.webSocketMessageHandler = webSocketMessageHandler;
     }
 
@@ -23,8 +23,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(webSocketMessageHandler, "/ws")
-                .addInterceptors(jwtHandshakeInterceptor)
-                .setAllowedOrigins("http://localhost:5173")
-                .withSockJS();
+                .setAllowedOrigins("http://localhost:5173");
     }
 }

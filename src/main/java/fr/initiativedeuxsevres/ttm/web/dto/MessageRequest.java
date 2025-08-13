@@ -12,6 +12,16 @@ import lombok.NoArgsConstructor;
 public class MessageRequest {
     private String content;
     private String receiver;
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    private String sender;
     public String getContent() {
         return content;
     }

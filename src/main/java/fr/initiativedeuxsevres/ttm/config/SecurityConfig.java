@@ -70,7 +70,9 @@ public class SecurityConfig {
             AuthenticationManager authenticationManager,
             SecurityContextRepository securityContextRepository
     ) throws Exception {
-        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL));
+        HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(
+                new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL)
+        );
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
@@ -80,9 +82,12 @@ public class SecurityConfig {
                         requests
                                 .requestMatchers("/ttm/**", "/users/**").authenticated()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/auth/**", "/ws/**").permitAll()
                                 .anyRequest().authenticated())
-                .logout((logout) -> logout.addLogoutHandler(clearSiteData).logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()))
+                .logout((logout) ->
+                        logout
+                        .addLogoutHandler(clearSiteData)
+                        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()))
                 .exceptionHandling(exception ->
                 exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

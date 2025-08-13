@@ -3,6 +3,7 @@ package fr.initiativedeuxsevres.ttm.config;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.initiativedeuxsevres.ttm.web.dto.MessageRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /// Gestionnnaire des messages
+@Slf4j
 public class WebSocketMessageHandler extends TextWebSocketHandler {
     private final JwtTokenProvider jwtTokenProvider;
     private final KafkaTemplate<String, String> kafkaTemplate;
@@ -26,13 +28,7 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        String username = session.getAttributes().get("username").toString();
-        if (username != null) {
-            session.getAttributes().put("username", username);
             webSocketSessions.add(session);
-        } else {
-            session.close(CloseStatus.NOT_ACCEPTABLE.withReason("Unauthorized"));
-        }
     }
 
     @Override
@@ -55,8 +51,10 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
             String receiver = jsonNode.get("receiver").asText();
             String sender = jsonNode.get("sender").asText();
 
-            MessageRequest messageRequest = new MessageRequest(content, receiver);
-            kafkaTemplate.send("message-topic", objectMapper.writeValueAsString(messageRequest));
+            MessageRequest messageRequest = new MessageRequest(content, receiver, sender);
+            String json = objectMapper.writeValueAsString(messageRequest);
+            log.info("Sending message: {}", json);
+            kafkaTemplate.send("message-topic", json);
         }
     }
 

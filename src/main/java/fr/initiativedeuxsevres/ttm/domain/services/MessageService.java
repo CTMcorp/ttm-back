@@ -8,13 +8,10 @@ import java.util.List;
 
 @Service
 public class MessageService {
-
     private final MessageRepository messageRepository;
-
     public MessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
     }
-
     /// crée un nouvel objet Message et le sauvegarde en base
     public Message saveMessage(String content, String sender, String receiver) {
         Message message = Message.builder()
@@ -24,7 +21,6 @@ public class MessageService {
                 .build();
         return messageRepository.save(message);
     }
-
     ///  récupère tous les messages depuis la base
     public List<Message> getAllMessages() {
         return messageRepository.findAll();

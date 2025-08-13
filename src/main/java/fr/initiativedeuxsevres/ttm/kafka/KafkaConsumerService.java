@@ -10,8 +10,6 @@ import fr.initiativedeuxsevres.ttm.web.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -30,9 +28,6 @@ public class KafkaConsumerService {
     /// quand un message arrive sur ce topic
     @KafkaListener(topics = "message-topic", groupId = "messaging")
     public void listen(String messageJson) throws JsonProcessingException {
-        /// récupère l'utilisateur connecté
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String sender = auth != null ? auth.getName() : "unknown";
 
         ///  désérialisation du message reçu
         MessageRequest messageRequest = objectMapper.readValue(messageJson, MessageRequest.class);
@@ -40,7 +35,7 @@ public class KafkaConsumerService {
         ///  enregistrement du message avec sender et receiver
         Message savedMessage = messageService.saveMessage(
                 messageRequest.getContent(),
-                sender,
+                messageRequest.getSender(),
                 messageRequest.getReceiver()
         );
 
@@ -48,16 +43,17 @@ public class KafkaConsumerService {
         MessageResponse response = MessageResponse.builder()
                 .id(savedMessage.getId())
                 .content(savedMessage.getContent())
-                .sender(sender)
+                .sender(messageRequest.getSender())
                 .receiver(messageRequest.getReceiver())
                 .build();
 
         String jsonResponse = objectMapper.writeValueAsString(response);
+        log.info("Sending message: {}", jsonResponse);
 
         /// envoie le message à tous les clients websocket connectés
         for (WebSocketSession session : WebSocketMessageHandler.getWebSocketSessions()) {
             String sessionUsername = session.getAttributes().get("username").toString();
-            if (sessionUsername != null && sessionUsername.equals(messageRequest.getReceiver())) {
+            if (sessionUsername != null && sessionUsername.equals(messageRequest.getSender())) {
                 try {
                     session.sendMessage(new TextMessage(jsonResponse));
                 } catch (IOException e) {
