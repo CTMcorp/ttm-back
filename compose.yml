@@ -11,10 +11,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
-
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.back.rule=Host(`back.localhost`)"
+      - "traefik.http.services.back.loadbalancer.server.port=8080"
     networks:
       - db
+      - ttm_front
 
   db: 
     image: postgres:latest
@@ -31,10 +34,12 @@ services:
       - backttm_data:/var/libs/postgresql/data
     networks:
       - db
+      - ttm_front
 
 volumes:
   backttm_data:
-
 networks:
   db:
+  ttm_front:
+    external: true
 

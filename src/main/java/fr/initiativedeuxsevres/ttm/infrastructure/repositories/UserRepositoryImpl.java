@@ -77,18 +77,7 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> getAllUsers() {
         String query = "SELECT * FROM users";
         return jdbcTemplate.query(query, (rs, rowNum) ->
-                new User(
-                        UUID.fromString(rs.getString("id")),
-                        rs.getString("firstname"),
-                        rs.getString("lastname"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("description"),
-                        rs.getString("role"),
-                        rs.getString("photo"),
-                        new ArrayList<>(),
-                        new ArrayList<>()
-                )
+                fromRS(rs)
         );
     }
 
@@ -96,18 +85,7 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User>getAllParrains(){
         String query = "SELECT * FROM users WHERE role = 'PARRAIN'";
         return jdbcTemplate.query(query, (rs, rowNum) ->
-                new User(
-                        UUID.fromString(rs.getString("id")),
-                        rs.getString("firstname"),
-                        rs.getString("lastname"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("description"),
-                        rs.getString("role"),
-                        rs.getString("photo"),
-                        new ArrayList<>(),
-                        new ArrayList<>()
-                )
+                fromRS(rs)
         );
     }
 
