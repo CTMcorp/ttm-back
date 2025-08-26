@@ -1,0 +1,37 @@
+name: Deploy back with Podman
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install podman
+        run: |
+          sudo apt update
+          sudo apt install -y podman
+          sudo apt install podman-compose
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build
+        run: ./gradlew bootJar
+
+      - name: Build image
+        run: podman build -t imagebackttm .
+
+      - name: Create extern network docker
+        run: podman network create ttm_front || true
+
+      - name: Deploy
+        run: podman-compose up -d
